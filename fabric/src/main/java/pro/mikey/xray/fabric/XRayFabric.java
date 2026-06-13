@@ -3,10 +3,10 @@ package pro.mikey.xray.fabric;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import pro.mikey.xray.ClientController;
@@ -22,18 +22,18 @@ public class XRayFabric implements ClientModInitializer {
     public void onInitializeClient() {
         XRay.INSTANCE.init();
 
-        KeyMappingHelper.registerKeyMapping(XRay.OPEN_GUI_KEY);
-        KeyMappingHelper.registerKeyMapping(XRay.TOGGLE_KEY);
+        KeyBindingHelper.registerKeyBinding(XRay.OPEN_GUI_KEY);
+        KeyBindingHelper.registerKeyBinding(XRay.TOGGLE_KEY);
 
         ClientTickEvents.END_CLIENT_TICK.register(this::clientTickEvent);
         ClientLifecycleEvents.CLIENT_STARTED.register((mc) -> ClientController.onSetup());
-        LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register(this::renderOverlay);
+        WorldRenderEvents.END_MAIN.register(this::renderOverlay);
 
         HudElementRegistry.addLast(HUD_ELEMENT_ID, (guiGraphics, tickCounter) -> HudOverlay.renderGameOverlayEvent(guiGraphics));
     }
 
-    private void renderOverlay(LevelRenderContext levelRenderContext) {
-        OutlineRender.renderBlocks(levelRenderContext.poseStack());
+    private void renderOverlay(WorldRenderContext worldRenderContext) {
+        OutlineRender.renderBlocks(worldRenderContext.matrices());
     }
 
 

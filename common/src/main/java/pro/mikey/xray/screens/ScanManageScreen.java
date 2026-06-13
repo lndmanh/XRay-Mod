@@ -2,7 +2,7 @@ package pro.mikey.xray.screens;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -91,7 +91,7 @@ public class ScanManageScreen extends GuiBase {
 
             // Check if the hand item is a block or not
             if (!(handItem.getItem() instanceof BlockItem)) {
-                minecraft.player.sendSystemMessage(Component.literal("[XRay] " + Component.translatable("xray.message.invalid_hand", Utils.safeItemStackName(handItem).getString())));
+                minecraft.player.displayClientMessage(Component.literal("[XRay] " + Component.translatable("xray.message.invalid_hand", Utils.safeItemStackName(handItem).getString())), false);
                 this.onClose();
                 return;
             }
@@ -123,11 +123,11 @@ public class ScanManageScreen extends GuiBase {
 
                     minecraft.setScreen(new ScanConfigureScreen(lookingAt, ScanManageScreen::new));
                 } else {
-                    player.sendSystemMessage(Component.literal("[XRay] " + I18n.get("xray.message.nothing_infront")));
+                    player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.nothing_infront")), false);
                     this.onClose();
                 }
             } catch (NullPointerException ex) {
-                player.sendSystemMessage(Component.literal("[XRay] " + I18n.get("xray.message.thats_odd")));
+                player.displayClientMessage(Component.literal("[XRay] " + I18n.get("xray.message.thats_odd")), false);
                 this.onClose();
             }
         })
@@ -179,7 +179,7 @@ public class ScanManageScreen extends GuiBase {
 
     @Override
     public boolean keyPressed(KeyEvent keyEvent) {
-        if (!search.isFocused() && keyEvent.key() == XRay.OPEN_GUI_KEY.key.getValue()) {
+        if (!search.isFocused() && XRay.OPEN_GUI_KEY.matches(keyEvent)) {
             this.onClose();
             return true;
         }
@@ -219,18 +219,18 @@ public class ScanManageScreen extends GuiBase {
     }
 
     @Override
-    public void renderExtra(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
+    public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
         if (!search.isFocused() && search.getValue().isEmpty()) {
-            graphics.text(getFontRender(), I18n.get("xray.single.search"), getWidth() / 2 - 130, getHeight() / 2 - 101, Color.GRAY.getRGB());
+            graphics.drawString(getFontRender(), I18n.get("xray.single.search"), getWidth() / 2 - 130, getHeight() / 2 - 101, Color.GRAY.getRGB());
         }
 
         Matrix3x2fStack pose = graphics.pose();
         pose.pushMatrix();
         pose.translate(this.getWidth() / 2f - 140, ((this.getHeight() / 2f) - 3) + 120);
         pose.scale(0.75f, 0.75f);
-        graphics.text(this.font, Component.translatable("xray.tooltips.edit1"), 0, 0, Color.GRAY.getRGB());
+        graphics.drawString(this.font, Component.translatable("xray.tooltips.edit1"), 0, 0, Color.GRAY.getRGB());
         pose.translate(0, 12);
-        graphics.text(this.font, Component.translatable("xray.tooltips.edit2"), 0, 0, Color.GRAY.getRGB());
+        graphics.drawString(this.font, Component.translatable("xray.tooltips.edit2"), 0, 0, Color.GRAY.getRGB());
         pose.popMatrix();
     }
 
@@ -320,13 +320,13 @@ public class ScanManageScreen extends GuiBase {
             }
 
             @Override
-            public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovering, float partialTicks) {
+            public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovering, float partialTicks) {
                 Font font = Minecraft.getInstance().font;
 
-                guiGraphics.text(font, this.entry.name(), this.getContentX() + 25, this.getContentY() + 7, 0xFFFFFFFF);
-                guiGraphics.text(font, this.entry.enabled() ? "Enabled" : "Disabled", this.getContentX() + 25, this.getContentY() + 17, this.entry.enabled() ? Color.GREEN.getRGB() : Color.RED.getRGB());
+                guiGraphics.drawString(font, this.entry.name(), this.getContentX() + 25, this.getContentY() + 7, 0xFFFFFFFF);
+                guiGraphics.drawString(font, this.entry.enabled() ? "Enabled" : "Disabled", this.getContentX() + 25, this.getContentY() + 17, this.entry.enabled() ? Color.GREEN.getRGB() : Color.RED.getRGB());
 
-                guiGraphics.item(this.icon, this.getContentX(), this.getContentY() + 7);
+                guiGraphics.renderItem(this.icon, this.getContentX(), this.getContentY() + 7);
 
                 var stack = guiGraphics.pose();
                 stack.pushMatrix();

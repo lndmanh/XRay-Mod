@@ -78,11 +78,11 @@ public enum ScanController {
             requestBlockFinder(true); // finally, force a refresh
 
             if (!XRay.config().showOverlay.get() && Minecraft.getInstance().player != null)
-                Minecraft.getInstance().player.sendSystemMessage(Component.translatable("xray.toggle.activated"));
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("xray.toggle.activated"), false);
         } else // disable drawing
         {
             if (!XRay.config().showOverlay.get() && Minecraft.getInstance().player != null)
-                Minecraft.getInstance().player.sendSystemMessage(Component.translatable("xray.toggle.deactivated"));
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("xray.toggle.deactivated"), false);
 
             xrayActive = false;
         }
@@ -158,8 +158,8 @@ public enum ScanController {
 
             List<ChunkPos> chunksToScan = new ArrayList<>();
             var playerChunkPos = player.chunkPosition();
-            for (int i = playerChunkPos.x() - range; i <= playerChunkPos.x() + range; i++) {
-                for (int j = playerChunkPos.z() - range; j <= playerChunkPos.z() + range; j++) {
+            for (int i = playerChunkPos.x - range; i <= playerChunkPos.x + range; i++) {
+                for (int j = playerChunkPos.z - range; j <= playerChunkPos.z + range; j++) {
                     chunksToScan.add(new ChunkPos(i, j));
                 }
             }

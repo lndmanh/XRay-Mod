@@ -1,7 +1,6 @@
 plugins {
     id 'java-library'
-    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT' apply(false)
-    id 'net.neoforged.moddev' version '2.0.141' apply(false)
+    id 'net.fabricmc.fabric-loom-remap' version '1.15-SNAPSHOT' apply(false)
     id "me.modmuss50.mod-publish-plugin" version "1.1.0"
 }
 
@@ -21,7 +20,7 @@ allprojects {
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
-        options.release = 25
+        options.release = 21
     }
 
     idea {
@@ -56,14 +55,14 @@ subprojects {
     def replaceProperties = [
             minecraft_version: minecraft_version,
             minecraft_version_range: minecraft_version_range.replace("[%base]", minecraft_version),
-            forge_version_range: neoforge_version_range,
+            fabric_api_version_range: fabric_api_version_range,
             version: version,
     ]
 
     processResources {
         inputs.properties replaceProperties
 
-        filesMatching(["META-INF/neoforge.mods.toml", "fabric.mod.json", "META-INF/mods.toml"]) {
+        filesMatching(["fabric.mod.json", "META-INF/mods.toml"]) {
             expand replaceProperties
         }
     }
@@ -101,12 +100,7 @@ publishMods {
     def curseForgeOptions = curseforgeOptions {
         accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
         minecraftVersions.add("${minecraft_version}")
-        javaVersions.add(JavaVersion.VERSION_25)
-    }
-
-    curseforge("curseforgeNeoforge") {
-        from(curseForgeOptions, createOptions("neoforge", "jar"))
-        projectId = "256256"
+        javaVersions.add(JavaVersion.VERSION_21)
     }
 
     curseforge("curseforgeFabric") {
@@ -120,7 +114,6 @@ publishMods {
         commitish = providers.environmentVariable("GITHUB_SHA").orElse("dryRun")
         tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("dryRun")
 
-        file = project.provider { project(":neoforge").tasks.jar }.flatMap { it.archiveFile }
-        additionalFiles.from project.provider { project(":fabric").tasks.jar }.flatMap { it.archiveFile }
+        file = project.provider { project(":fabric").tasks.jar }.flatMap { it.archiveFile }
     }
 }
