@@ -3,7 +3,7 @@ plugins {
 }
 
 loom {
-    accessWidenerPath = project(":common").file("src/main/resources/xray.accesswidener")
+    accessWidenerPath = project(":common").file("src/main/resources/survivaltweaks.accesswidener")
 
     mixin {
         useLegacyMixinAp = false

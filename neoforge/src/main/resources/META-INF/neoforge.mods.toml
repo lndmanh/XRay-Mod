@@ -1,24 +1,24 @@
 modLoader="javafml" #required
 loaderVersion="[4,)" #required
 credits="ErrorMikey" #optional
-authors="AdvancedXRay Team" #optional
-license="GNU GPL v3.0 (https://github.com/MichaelHillcox/XRay-Mod/blob/master/LICENSE)"
+authors="STW Team" #optional
+license="GNU GPL v3.0"
 displayTest="IGNORE_ALL_VERSION"
 
 [[mods]]
-    modId="xray"
+    modId="survivaltweaks"
     version="${version}"
-    displayName="Advanced XRay"
-    description="An advanced XRay mod for Minecraft."
+    displayName="Survival Tweaks"
+    description="A collection of quality-of-life survival tweaks for Minecraft."
 
-[[dependencies.xray]]
+[[dependencies.survivaltweaks]]
     modId="neoforge"
     required=true
     versionRange="[${forge_version_range},)"
     ordering="NONE"
     side="CLIENT"
 
-[[dependencies.xray]]
+[[dependencies.survivaltweaks]]
     modId="minecraft"
     required=true
     versionRange="[${minecraft_version_range})"
@@ -26,4 +26,4 @@ displayTest="IGNORE_ALL_VERSION"
     side="CLIENT"
 
 [[mixins]]
-config = 'xray.mixins.json'
+config = 'survivaltweaks.mixins.json'

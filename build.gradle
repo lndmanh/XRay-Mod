@@ -10,7 +10,7 @@ tasks.named('wrapper', Wrapper).configure {
 }
 
 version = mod_version
-group = 'pro.mikey'
+group = 'dev.stw'
 
 allprojects {
     apply plugin: 'idea'
@@ -40,7 +40,7 @@ allprojects {
 
 subprojects {
     base {
-        archivesName = "advanced-xray-$project.name"
+        archivesName = "survival-tweaks-$project.name"
     }
 
     if (project.name != "common") {
@@ -93,7 +93,7 @@ publishMods {
     def createOptions = (String platform, String taskName) -> {
         publishOptions {
             file = project.provider { project(":$platform").tasks[taskName] }.flatMap { it.archiveFile }
-            displayName = "[${platform.toUpperCase()}] Advanced XRay ${mod_version}"
+            displayName = "[${platform.toUpperCase()}] Survival Tweaks ${mod_version}"
             modLoaders.add(platform.toLowerCase())
         }
     }
@@ -116,7 +116,7 @@ publishMods {
 
     github {
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
-        repository = "AdvancedXRay/XRay-Mod"
+        repository = "SurvivalTweaks/SurvivalTweaks-Mod"
         commitish = providers.environmentVariable("GITHUB_SHA").orElse("dryRun")
         tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("dryRun")
 

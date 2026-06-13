@@ -1,31 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "xray",
+  "id": "survivaltweaks",
   "version": "${version}",
-  "name": "Advanced XRay (Fabric)",
-  "description": "An Advanced XRay mod for Fabric with all your block finding needs baked right in!",
+  "name": "Survival Tweaks (Fabric)",
+  "description": "A collection of quality-of-life survival tweaks for Fabric!",
   "authors": [
     "ErrorMikey"
   ],
   "contact": {
-    "homepage": "https://github.com/AdvancedXRay/xray-fabric",
-    "sources": "https://github.com/AdvancedXRay/xray-fabric"
   },
   "license": "MIT",
-  "icon": "assets/xray/icon.png",
+  "icon": "assets/survivaltweaks/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "pro.mikey.xray.fabric.XRayFabric"
+      "dev.stw.survivaltweaks.fabric.SurvivalTweaksFabric"
     ]
   },
   "mixins": [
     {
-      "config": "xray.mixins.json",
+      "config": "survivaltweaks.mixins.json",
       "environment": "client"
     },
     {
-      "config": "xray.fabric.mixins.json",
+      "config": "survivaltweaks.fabric.mixins.json",
       "environment": "client"
     }
   ],
@@ -34,5 +32,5 @@
     "fabric-api": "*",
     "minecraft": ">=1.21.6"
   },
-  "accessWidener": "xray.accesswidener"
+  "accessWidener": "survivaltweaks.accesswidener"
 }

@@ -3,7 +3,7 @@ plugins {
 }
 
 loom {
-    accessWidenerPath = project(":common").file("src/main/resources/xray.accesswidener")
+    accessWidenerPath = project(":common").file("src/main/resources/survivaltweaks.accesswidener")
 
     runs {
         client {
@@ -14,7 +14,7 @@ loom {
     }
 
     mods {
-        "xray" {
+        "survivaltweaks" {
             sourceSet sourceSets.main
             sourceSet("main", project(":common"))
         }

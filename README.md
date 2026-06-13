@@ -3,6 +3,10 @@
 # Advanced XRay
 NeoForge & Fabric based XRay mod designed to aid players who don't like the ore searching process.
 
+## Development
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) for Docker Compose and local build instructions.
+
 [![Available For](http://cf.way2muchnoise.eu/versions/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray)
 - [![NeoForge Downloads](http://cf.way2muchnoise.eu/256256.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray) for NeoForge
 - [![Fabric Downloads](http://cf.way2muchnoise.eu/444663.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-xray-fabric-edition) for Fabric
