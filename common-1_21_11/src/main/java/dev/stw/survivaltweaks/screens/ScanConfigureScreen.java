@@ -1,0 +1,227 @@
+package dev.stw.survivaltweaks.screens;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
+import dev.stw.survivaltweaks.SurvivalTweaks;
+import dev.stw.survivaltweaks.core.ScanController;
+import dev.stw.survivaltweaks.core.scanner.BlockScanType;
+import dev.stw.survivaltweaks.core.scanner.ScanStore;
+import dev.stw.survivaltweaks.core.scanner.ScanType;
+import dev.stw.survivaltweaks.screens.helpers.GuiBase;
+import dev.stw.survivaltweaks.screens.helpers.ImageButton;
+import dev.stw.survivaltweaks.screens.helpers.SliderWidget;
+
+import java.util.Objects;
+import java.util.function.Supplier;
+
+public class ScanConfigureScreen extends GuiBase {
+    private static final Identifier TRASH_ICON = SurvivalTweaks.assetLocation("gui/trash.png");
+    private static final Identifier TRANSPARENT_BACKGROUND = SurvivalTweaks.assetLocation("gui/transparent_background.png");
+
+    private EditBox oreName;
+
+    private SliderWidget redSlider;
+    private SliderWidget greenSlider;
+    private SliderWidget blueSlider;
+    private SliderWidget alphaSlider;
+
+    private final Block selectBlock;
+    private final ItemStack icon;
+
+    private boolean oreNameCleared = false;
+    private final Supplier<GuiBase> previousScreenCallback;
+
+    @Nullable
+    private ScanType editingType = null;
+
+    public ScanConfigureScreen(Block selectedBlock, Supplier<GuiBase> previousScreenCallback) {
+        super(false);
+        this.previousScreenCallback = previousScreenCallback;
+
+        this.selectBlock = selectedBlock;
+        this.icon = new ItemStack(selectBlock, 1);
+    }
+
+    public ScanConfigureScreen(ScanType editingType, Supplier<GuiBase> previousScreenCallback) {
+        super(false);
+        this.previousScreenCallback = previousScreenCallback;
+
+        if (!(editingType instanceof BlockScanType blockScanType)) {
+            throw new IllegalArgumentException("Editing type must be an instance of BlockScanType");
+        }
+
+        this.editingType = blockScanType;
+        this.selectBlock = blockScanType.block;
+
+        this.icon = new ItemStack(selectBlock, 1);
+    }
+
+    @Override
+    public void init() {
+        // Called when the gui should be (re)created
+        GridLayout layout = new GridLayout();
+        layout.columnSpacing(3);
+        layout.setPosition(getWidth() / 2 - 100, getHeight() / 2 + 85);
+        GridLayout.RowHelper rowHelper = layout.createRowHelper(3);
+
+        if (editingType != null) {
+            rowHelper.addChild(ImageButton.builder(b -> {
+                        removeBlock();
+                    })
+                    .image(SurvivalTweaks.assetLocation("gui/trash.png"), 16, 16)
+                    .size(20, 20)
+                    .build());
+        }
+
+        rowHelper.addChild(Button.builder(Component.translatable("survivaltweaks.single.cancel"), b -> Minecraft.getInstance().setScreen(this.previousScreenCallback.get()))
+                .size(60, 20)
+                .build());
+
+        rowHelper.addChild(Button.builder(Component.translatable(editingType != null ? "survivaltweaks.title.edit" : "survivaltweaks.single.add"), b -> {
+                    if (editingType != null) {
+                        editBlock();
+                    } else {
+                        addBlock();
+                    }
+                })
+                .size(editingType != null ? 117 : 138, 20)
+                .build());
+
+        layout.arrangeElements();
+        layout.visitWidgets(this::addRenderableWidget);
+
+        int defaultColor = 0xFF00A8FF; // Default color (Blue with full alpha)
+        if (editingType != null) {
+            // Use the existing color with its alpha value
+            defaultColor = editingType.colorInt;
+            // Only add alpha if the color doesn't have it (checking if top byte is 0)
+            if ((defaultColor & 0xFF000000) == 0) {
+                defaultColor = defaultColor | 0xFF000000;
+            }
+        }
+
+        double alpha = ((defaultColor >> 24) & 0xFF) / 255.0;
+        double red = (defaultColor >> 16 & 0xFF) / 255.0;
+        double green = (defaultColor >> 8 & 0xFF) / 255.0;
+        double blue = (defaultColor & 0xFF) / 255.0;
+
+        addRenderableWidget(redSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 - 16, 202, 20, "survivaltweaks.color.red", red));
+        addRenderableWidget(greenSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 7, 202, 20, "survivaltweaks.color.green", green));
+        addRenderableWidget(blueSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 30, 202, 20, "survivaltweaks.color.blue", blue));
+        addRenderableWidget(alphaSlider = new SliderWidget(getWidth() / 2 - 100, getHeight() / 2 + 53, 202, 20, "survivaltweaks.color.alpha", alpha));
+
+        oreName = new EditBox(minecraft.font, getWidth() / 2 - 100, getHeight() / 2 - 70, 202, 20, Component.empty());
+        if (editingType != null) {
+            oreName.setValue(editingType.name);
+        } else {
+            oreName.setValue(selectBlock.getName().getString());
+        }
+
+        addRenderableWidget(oreName);
+    }
+
+    private void editBlock() {
+        if (editingType == null) {
+            throw new IllegalStateException("Editing type is not set");
+        }
+
+        int color = (int) (alphaSlider.getValue() * 255) << 24
+                | (int) (redSlider.getValue() * 255) << 16
+                | (int) (greenSlider.getValue() * 255) << 8
+                | (int) (blueSlider.getValue() * 255);
+
+        editingType.updateColor(color);
+        editingType.name = oreName.getValue();
+        ScanController.INSTANCE.scanStore().save();
+        ScanController.INSTANCE.requestBlockFinder(true);
+        minecraft.setScreen(this.previousScreenCallback.get());
+    }
+
+    private void removeBlock() {
+        if (editingType == null) {
+            throw new IllegalStateException("Editing type is not set");
+        }
+
+        ScanStore scanStore = ScanController.INSTANCE.scanStore();
+        scanStore.removeEntry(editingType);
+        ScanController.INSTANCE.requestBlockFinder(true);
+        minecraft.setScreen(this.previousScreenCallback.get());
+    }
+
+    private void addBlock() {
+        if (editingType != null) {
+            throw new IllegalStateException("Editing type is already set");
+        }
+
+        ScanStore scanStore = ScanController.INSTANCE.scanStore();
+        scanStore.addEntry(new BlockScanType(
+                selectBlock,
+                oreName.getValue(),
+                // Save as RGBA by default
+                "rgba(" + (int) (redSlider.getValue() * 255) + ", " + (int) (greenSlider.getValue() * 255) + ", " + (int) (blueSlider.getValue() * 255) + ", " + (int) (alphaSlider.getValue() * 255) + ")",
+                scanStore.getNextOrder()
+        ));
+
+        ScanController.INSTANCE.requestBlockFinder(true);
+        minecraft.setScreen(new ScanManageScreen());
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+    }
+
+    @Override
+    public void renderExtra(GuiGraphics graphics, int x, int y, float partialTicks) {
+        graphics.drawString(font, selectBlock.getName().getString(), getWidth() / 2 - 100, getHeight() / 2 - 90, 0xffffffff, false);
+
+        // blit render the TRANSPARENT_BACKGROUND texture, a 16x16 checkerboard pattern that should tile to fit the fill area
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TRANSPARENT_BACKGROUND, this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, 0, 0, 202, 24, 16, 16, 0x80FFFFFF);
+
+        int color = ((int) (this.alphaSlider.getValue() * 255) << 24) | ((int) (this.redSlider.getValue() * 255) << 16) | ((int) (this.greenSlider.getValue() * 255) << 8) | (int) (this.blueSlider.getValue() * 255);
+        graphics.fill(this.getWidth() / 2 - 100, this.getHeight() / 2 - 45, (this.getWidth() / 2 + 2) + 100, (this.getHeight() / 2 - 45) + 24, color);
+
+        oreName.render(graphics, x, y, partialTicks);
+
+        graphics.renderItem(this.icon, this.getWidth() / 2 + 85, this.getHeight() / 2 - 105);
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl) {
+        if (oreName.mouseClicked(mouseButtonEvent, bl))
+            this.setFocused(oreName);
+
+        if (oreName.isFocused() && !oreNameCleared) {
+            oreName.setValue("");
+            oreNameCleared = true;
+        }
+
+        if (!oreName.isFocused() && oreNameCleared && Objects.equals(oreName.getValue(), "")) {
+            oreNameCleared = false;
+            oreName.setValue(this.selectBlock.getName().getString());
+        }
+
+        return super.mouseClicked(mouseButtonEvent, bl);
+    }
+
+    @Override
+    public boolean hasTitle() {
+        return true;
+    }
+
+    @Override
+    public String title() {
+        return I18n.get("survivaltweaks.title.config");
+    }
+}

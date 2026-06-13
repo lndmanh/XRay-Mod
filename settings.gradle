@@ -4,8 +4,7 @@ pluginManagement {
         gradlePluginPortal()
 
         maven { url = 'https://maven.fabricmc.net' }
-        maven { url = 'https://maven.neoforged.net/releases' }
     }
 }
 
-include("common", "neoforge", "fabric")
+include("common", "common-1_21_11", "fabric-26_1", "fabric-1_21_11")

@@ -1,0 +1,43 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-remap'
+}
+
+loom {
+    accessWidenerPath = project(":common-1_21_11").file("src/main/resources/survivaltweaks.accesswidener")
+
+    mixin {
+        useLegacyMixinAp = false
+    }
+}
+
+repositories {
+    maven {
+        url = "https://cursemaven.com/"
+    }
+}
+
+dependencies {
+    mappings loom.officialMojangMappings()
+    minecraft "com.mojang:minecraft:1.21.11"
+
+    testImplementation platform('org.junit:junit-bom:5.10.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+
+    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+
+//    modCompileOnly "curse.maven:irisshaders-455508:${iris_version}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+repositories {
+    maven {
+        url = "https://repo.spongepowered.org/repository/maven-public/"
+        content {
+            includeGroup "org.spongepowered"
+        }
+    }
+}

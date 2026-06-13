@@ -1,0 +1,57 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-remap'
+}
+
+loom {
+    accessWidenerPath = project(":common-1_21_11").file("src/main/resources/survivaltweaks.accesswidener")
+
+    runs {
+        client {
+            source = sourceSets.main
+            ideConfigGenerated = true
+            client()
+        }
+    }
+
+    mods {
+        "survivaltweaks" {
+            sourceSet sourceSets.main
+            sourceSet("main", project(":common-1_21_11"))
+        }
+    }
+
+    mixin {
+        useLegacyMixinAp = false
+    }
+}
+
+dependencies {
+    api project(":common-1_21_11")
+    mappings loom.officialMojangMappings()
+    minecraft "com.mojang:minecraft:1.21.11"
+
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_1_21_11_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_1_21_11_api_version}"
+}
+
+jar {
+    from project(":common-1_21_11").sourceSets.main.output
+}
+
+repositories {
+}
+
+java {
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.base.archivesName.get()
+            version project.version
+            from components.java
+        }
+    }
+}

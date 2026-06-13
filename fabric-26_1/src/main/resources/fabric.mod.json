@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "survivaltweaks",
+  "version": "${version}",
+  "name": "Survival Tweaks (Fabric)",
+  "description": "A collection of quality-of-life survival tweaks for Fabric!",
+  "authors": [
+    "ErrorMikey"
+  ],
+  "contact": {
+  },
+  "license": "MIT",
+  "icon": "assets/survivaltweaks/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.stw.survivaltweaks.fabric.SurvivalTweaksFabric"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "survivaltweaks.mixins.json",
+      "environment": "client"
+    },
+    {
+      "config": "survivaltweaks.fabric.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version_range}"
+  },
+  "accessWidener": "survivaltweaks.accesswidener"
+}

@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT' apply(false)
-    id 'net.neoforged.moddev' version '2.0.141' apply(false)
+    id 'net.fabricmc.fabric-loom-remap' version '1.15-SNAPSHOT' apply(false)
     id "me.modmuss50.mod-publish-plugin" version "1.1.0"
 }
 
@@ -43,7 +43,7 @@ subprojects {
         archivesName = "survival-tweaks-$project.name"
     }
 
-    if (project.name != "common") {
+    if (project.name == "fabric-26_1") {
         dependencies {
             api project(":common")
         }
@@ -53,17 +53,19 @@ subprojects {
         }
     }
 
+    def moduleMinecraftVersion = project.name.endsWith("1_21_11") ? rootProject.minecraft_1_21_11_version : rootProject.minecraft_version
+    def moduleMinecraftVersionRange = project.name.endsWith("1_21_11") ? rootProject.minecraft_1_21_11_version_range : rootProject.minecraft_version_range
+
     def replaceProperties = [
-            minecraft_version: minecraft_version,
-            minecraft_version_range: minecraft_version_range.replace("[%base]", minecraft_version),
-            forge_version_range: neoforge_version_range,
+            minecraft_version: moduleMinecraftVersion,
+            minecraft_version_range: moduleMinecraftVersionRange.replace("[%base]", moduleMinecraftVersion),
             version: version,
     ]
 
     processResources {
         inputs.properties replaceProperties
 
-        filesMatching(["META-INF/neoforge.mods.toml", "fabric.mod.json", "META-INF/mods.toml"]) {
+        filesMatching(["fabric.mod.json"]) {
             expand replaceProperties
         }
     }
@@ -90,27 +92,29 @@ publishMods {
     version = "${mod_version}"
     type = STABLE
 
-    def createOptions = (String platform, String taskName) -> {
+    def createOptions = (String platform, String taskName, String minecraftVersion) -> {
         publishOptions {
             file = project.provider { project(":$platform").tasks[taskName] }.flatMap { it.archiveFile }
-            displayName = "[${platform.toUpperCase()}] Survival Tweaks ${mod_version}"
-            modLoaders.add(platform.toLowerCase())
+            displayName = "[FABRIC ${minecraftVersion}] Survival Tweaks ${mod_version}"
+            modLoaders.add("fabric")
         }
     }
 
-    def curseForgeOptions = curseforgeOptions {
-        accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
-        minecraftVersions.add("${minecraft_version}")
-        javaVersions.add(JavaVersion.VERSION_25)
+    def createCurseForgeOptions = (String minecraftVersion) -> {
+        curseforgeOptions {
+            accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
+            minecraftVersions.add(minecraftVersion)
+            javaVersions.add(JavaVersion.VERSION_25)
+        }
     }
 
-    curseforge("curseforgeNeoforge") {
-        from(curseForgeOptions, createOptions("neoforge", "jar"))
-        projectId = "256256"
+    curseforge("curseforgeFabric261") {
+        from(createCurseForgeOptions(rootProject.minecraft_version), createOptions("fabric-26_1", "jar", rootProject.minecraft_version))
+        projectId = "444663"
     }
 
-    curseforge("curseforgeFabric") {
-        from(curseForgeOptions, createOptions("fabric", "jar"))
+    curseforge("curseforgeFabric1211") {
+        from(createCurseForgeOptions(rootProject.minecraft_1_21_11_version), createOptions("fabric-1_21_11", "jar", rootProject.minecraft_1_21_11_version))
         projectId = "444663"
     }
 
@@ -120,7 +124,7 @@ publishMods {
         commitish = providers.environmentVariable("GITHUB_SHA").orElse("dryRun")
         tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("dryRun")
 
-        file = project.provider { project(":neoforge").tasks.jar }.flatMap { it.archiveFile }
-        additionalFiles.from project.provider { project(":fabric").tasks.jar }.flatMap { it.archiveFile }
+        file = project.provider { project(":fabric-26_1").tasks.jar }.flatMap { it.archiveFile }
+        additionalFiles.from project.provider { project(":fabric-1_21_11").tasks.jar }.flatMap { it.archiveFile }
     }
 }

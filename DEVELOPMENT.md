@@ -49,8 +49,8 @@ Build the mod jars:
 
 ## Build outputs
 
-- Fabric jar: `fabric/build/libs/`
-- NeoForge jar: `neoforge/build/libs/`
+- Fabric 26.1 jar: `fabric-26_1/build/libs/`
+- Fabric 1.21.11 jar: `fabric-1_21_11/build/libs/`
 
 ## Release notes
 
