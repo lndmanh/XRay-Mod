@@ -7,4 +7,4 @@ pluginManagement {
     }
 }
 
-include("common", "common-1_21_11", "fabric-26_1", "fabric-1_21_11")
+include("common-1_21_11", "fabric-1_21_11")

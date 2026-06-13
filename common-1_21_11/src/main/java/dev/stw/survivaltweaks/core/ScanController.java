@@ -11,8 +11,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import dev.stw.survivaltweaks.SurvivalTweaks;
-import dev.stw.survivaltweaks.core.profile.ProfileActivationContext;
-import dev.stw.survivaltweaks.core.profile.ProfileStore;
 import dev.stw.survivaltweaks.core.scanner.ScanStore;
 
 import java.util.*;
@@ -51,7 +49,7 @@ public enum ScanController {
     private ChunkPos lastChunkPos = null;
     final AtomicLong scanGeneration = new AtomicLong();
 
-    private final ProfileStore profileStore = new ProfileStore();
+    private final ScanStore scanStore = new ScanStore();
 
 //    private BlockStore blockStore = new BlockStore();
 
@@ -61,23 +59,10 @@ public enum ScanController {
     private boolean scanActive = false; // Off by default
 
     public void init() {
-        this.profileStore.load();
+        this.scanStore.load();
     }
 
-    public ProfileStore profileStore() { return profileStore; }
-
-    public ScanStore scanStore() {
-        if (profileStore.activeProfile() == null) profileStore.load();
-        return profileStore.activeProfile().scanStore();
-    }
-
-    public void updateProfileForCurrentConnection() {
-        var mc = Minecraft.getInstance();
-        var context = new ProfileActivationContext(mc.hasSingleplayerServer(), mc.getCurrentServer() == null ? null : mc.getCurrentServer().ip);
-        if (profileStore.selectForContextIfChanged(context)) { clearScanResults(); requestBlockFinder(true); }
-    }
-
-    public void clearProfileActivationContext() { if (profileStore.clearLastActivationContext()) clearScanResults(); }
+    public ScanStore scanStore() { return scanStore; }
 
     private void clearScanResults() {
         syncRenderList.clear();

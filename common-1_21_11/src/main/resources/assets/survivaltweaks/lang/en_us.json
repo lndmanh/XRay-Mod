@@ -1,7 +1,6 @@
 {
   "survivaltweaks.mod_name": "Survival Tweaks",
   "survivaltweaks.debug.init": "Survival Tweaks Initialised",
-
   "survivaltweaks.single.cancel": "Cancel",
   "survivaltweaks.single.add": "Add",
   "survivaltweaks.single.delete": "Delete",
@@ -10,47 +9,11 @@
   "survivaltweaks.single.close": "Close",
   "survivaltweaks.single.search": "Search",
   "survivaltweaks.single.help": "Help",
-  "survivaltweaks.title.profile": "Profiles",
-  "survivaltweaks.profile.button": "Profiles",
-  "survivaltweaks.profile.title": "Profiles",
-  "survivaltweaks.profile.name": "Profile Name",
-  "survivaltweaks.profile.server": "Server Address",
-  "survivaltweaks.profile.select": "Select",
-  "survivaltweaks.profile.new": "New",
-  "survivaltweaks.profile.rename": "Rename",
-  "survivaltweaks.profile.delete": "Delete",
-  "survivaltweaks.profile.mode": "Mode: %s",
-  "survivaltweaks.profile.add_server": "Add Server",
-  "survivaltweaks.profile.remove_server": "Remove",
-  "survivaltweaks.profile.use_saved": "Use Saved",
-  "survivaltweaks.profile.server.current": "Current",
-  "survivaltweaks.profile.server.saved": "Saved",
-  "survivaltweaks.profile.mode.none": "None",
-  "survivaltweaks.profile.mode.default": "Default",
-  "survivaltweaks.profile.mode.singleplayer": "Singleplayer",
-  "survivaltweaks.profile.mode.multiplayer": "Multiplayer",
-  "survivaltweaks.profile.message.selected": "Selected %s",
-  "survivaltweaks.profile.message.created": "Created %s",
-  "survivaltweaks.profile.message.renamed": "Profile renamed",
-  "survivaltweaks.profile.message.deleted": "Profile deleted",
-  "survivaltweaks.profile.message.invalid_name": "Enter a profile name",
-  "survivaltweaks.profile.message.default_blocked": "Default profile can't be deleted",
-  "survivaltweaks.profile.message.default_mode_blocked": "Choose another profile to make it default first",
-  "survivaltweaks.profile.message.mode": "Mode set to %s",
-  "survivaltweaks.profile.message.server_added": "Server added",
-  "survivaltweaks.profile.message.server_removed": "Server removed",
-  "survivaltweaks.profile.message.server_blank": "Enter or select a server address",
-  "survivaltweaks.profile.message.server_duplicate": "That server is already assigned",
-  "survivaltweaks.profile.message.no_saved_selected": "Select a saved server first",
-  "survivaltweaks.profile.message.server_rejected": "Server not changed",
-
   "survivaltweaks.overlay": "Active",
-
   "survivaltweaks.color.red": "Red: %s",
   "survivaltweaks.color.green": "Green: %s",
   "survivaltweaks.color.blue": "Blue: %s",
   "survivaltweaks.color.alpha": "Alpha: %s",
-
   "survivaltweaks.input.gui": "GUI Name",
   "survivaltweaks.input.add": "Add Block",
   "survivaltweaks.input.add_hand": "Add Block in hand",
@@ -58,14 +21,11 @@
   "survivaltweaks.input.distance": "Distance: %s",
   "survivaltweaks.input.show-lava": "Show Lava: %s",
   "survivaltweaks.input.toggle_oredict": "Use Dictionary",
-
   "survivaltweaks.title.config": "Configure Block",
   "survivaltweaks.title.edit": "Edit Block",
   "survivaltweaks.title.edit_meta": "Edit Meta",
-
   "survivaltweaks.chat.first-time": "§6Thank you for using Survival Tweaks, §rYou can open the menu by pressing §a[%s§a] §rand toggle scanning with §a[%s§a]§r.",
   "survivaltweaks.chat.first-time-line-2": "These can be changed in settings -> options -> controls -> keybindings. §cThis message will only show once.",
-
   "survivaltweaks.message.missing_input": "You need to have all the inputs filled in",
   "survivaltweaks.message.already_exists": "This block has already been added to the block list",
   "survivaltweaks.message.added_block": "Successfully added %s.",
@@ -81,22 +41,17 @@
   "survivaltweaks.message.not_a_number": "{%s} is not a number. Please use a number for your meta",
   "survivaltweaks.message.meta_not_supported": "{%s} isn't a valid meta data for {%s}",
   "survivaltweaks.message.state_warning": "Warning, this will limit you to default\nblocks. Use looking at or in hand to get\nthe absolute block you require.\nIn some cases (chests) this may be what you need to do\nif that's the case then this is the right option.",
-
   "survivaltweaks.tooltips.add_block": "Select a block to add to the scanned blocks\nThis uses block defaults, if you require a specific block\nthen use 'Add Looking At'.",
   "survivaltweaks.tooltips.add_block_in_hand": "Automatically selects the block you've\ngot in your hand to add to the list.",
   "survivaltweaks.tooltips.add_block_looking_at": "Automatically selects the block you're\nlooking at to add to the list.",
   "survivaltweaks.tooltips.show_lava": "Displays lava in RED like a normal block.\nWatch out! It's hot.",
   "survivaltweaks.tooltips.distance": "Warning: Larger radius will lag for a second whilst updating.",
-  "survivaltweaks.tooltips.profile": "Manage scan profiles and server activation rules.",
   "survivaltweaks.tooltips.edit1": "Click to enable / disable",
   "survivaltweaks.tooltips.edit2": "Hold shift and click to edit.",
-
   "survivaltweaks.message.help.gui": "To edit a block simply shift click on the block you wish to edit.\nIf you want to enable / disable a block then click on a block\n and it'll toggle on and off.",
   "survivaltweaks.message.help.warning": "As a warning, using any distance over 64 will cause FPS drops due\nto the vast amount of blocks that we have to scan. (It's like 256^3)",
-
   "survivaltweaks.config.toggle": "Toggle Scanner",
   "survivaltweaks.config.open": "Open Scanner Menu",
-
   "survivaltweaks.toggle.activated": "Scanner activated",
   "survivaltweaks.toggle.deactivated": "Scanner deactivated"
 }

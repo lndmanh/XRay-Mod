@@ -67,11 +67,8 @@ public class SurvivalTweaksFabric implements ClientModInitializer {
 
     private void clientTickEvent(Minecraft mc) {
         if (mc.player == null || mc.level == null) {
-            ScanController.INSTANCE.clearProfileActivationContext();
             return;
         }
-
-        ScanController.INSTANCE.updateProfileForCurrentConnection();
 
         if (mc.screen != null) {
             return;

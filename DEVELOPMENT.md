@@ -3,9 +3,9 @@
 ## Prerequisites
 
 - Docker Desktop with Docker Compose, or
-- a local JDK 25 installation
+- a local JDK 21 installation
 
-This project requires Java 25.
+This project requires Java 21.
 
 ## Docker Compose workflow
 
@@ -33,7 +33,7 @@ Run a clean build:
 docker compose run --rm gradle ./gradlew clean build --no-daemon
 ```
 
-## Native JDK 25 workflow
+## Native JDK 21 workflow
 
 Run tests:
 
@@ -49,7 +49,6 @@ Build the mod jars:
 
 ## Build outputs
 
-- Fabric 26.1 jar: `fabric-26_1/build/libs/`
 - Fabric 1.21.11 jar: `fabric-1_21_11/build/libs/`
 
 ## Release notes
@@ -59,5 +58,5 @@ They are not needed for normal local test or build runs.
 
 ## Troubleshooting
 
-- If Gradle reports it needs JVM 17 or newer, make sure you are using Java 25.
+- If Gradle reports a JVM/version mismatch, make sure you are using Java 21.
 - If Docker Compose commands fail, verify Docker Desktop is running and the repo is mounted at `/workspace`.

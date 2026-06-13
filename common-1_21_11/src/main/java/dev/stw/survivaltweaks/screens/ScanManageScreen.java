@@ -159,16 +159,6 @@ public class ScanManageScreen extends GuiBase {
         );
 
         addRenderableWidget(
-            Button.builder(Component.translatable("survivaltweaks.profile.button"), button -> {
-                minecraft.setScreen(new ProfileManageScreen());
-            })
-                    .pos(getWidth() / 2 + 79, getHeight() / 2 + 50)
-                    .size(120, 20)
-                    .tooltip(Tooltip.create(Component.translatable("survivaltweaks.tooltips.profile")))
-                    .build()
-        );
-
-        addRenderableWidget(
             Button.builder(Component.translatable("survivaltweaks.single.help"), button -> {
                 minecraft.setScreen(new HelpScreen());
             })

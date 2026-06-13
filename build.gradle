@@ -21,7 +21,7 @@ allprojects {
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
-        options.release = 25
+        options.release = 21
     }
 
     idea {
@@ -104,13 +104,8 @@ publishMods {
         curseforgeOptions {
             accessToken = providers.environmentVariable("CURSE_DEPLOY_TOKEN")
             minecraftVersions.add(minecraftVersion)
-            javaVersions.add(JavaVersion.VERSION_25)
+            javaVersions.add(JavaVersion.VERSION_21)
         }
-    }
-
-    curseforge("curseforgeFabric261") {
-        from(createCurseForgeOptions(rootProject.minecraft_version), createOptions("fabric-26_1", "jar", rootProject.minecraft_version))
-        projectId = "444663"
     }
 
     curseforge("curseforgeFabric1211") {
@@ -124,7 +119,6 @@ publishMods {
         commitish = providers.environmentVariable("GITHUB_SHA").orElse("dryRun")
         tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse("dryRun")
 
-        file = project.provider { project(":fabric-26_1").tasks.jar }.flatMap { it.archiveFile }
-        additionalFiles.from project.provider { project(":fabric-1_21_11").tasks.jar }.flatMap { it.archiveFile }
+        file = project.provider { project(":fabric-1_21_11").tasks.jar }.flatMap { it.archiveFile }
     }
 }
